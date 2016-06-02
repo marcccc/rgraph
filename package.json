@@ -1,0 +1,21 @@
+{
+  "name": "rgraph",
+  "version": "1.0.0",
+  "description": "graph by rapheal",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "rgraph",
+    "raphael",
+    "topo"
+  ],
+  "author": "mingliang",
+  "license": "ISC",
+  "dependencies": {
+    "raphael": "^2.2.0"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^2.19.0"
+  }
+}
