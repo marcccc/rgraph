@@ -166,8 +166,19 @@ define(function() {
             if(_node.rText){
                 _node._textDeg = _node.rText._.deg;
             }
-        }, function(event) {
 
+            for(var i=0,len=_node.lines.length;i<len;i++){
+                if(_node.lines[i].lineEffect){
+                    _node.lines[i].lineEffect.stop();
+                }
+            }
+        }, function(event) {
+            for(var i=0,len=_node.lines.length;i<len;i++){
+                _node.lines[i].resetEffect();
+                if(_node.lines[i].lineEffect){
+                    _node.lines[i].lineEffect.run();    
+                }
+            }
         });
 
 

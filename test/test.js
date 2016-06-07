@@ -103,6 +103,7 @@ graph.addLine(n1, n4);
 graph.addLine(n2, n3);
 graph.addLine(n2, n4);
 graph.addLine(n3, n4, {
+    effect: true,
     hoverText: '线的浮动信息'
 });
 
@@ -113,12 +114,12 @@ graph.addLine(n3, n4, {
 var resizeTimeout = 0;
 var timeStamp = new Date() - 0;
 window.onresize = function() {
-    var now = new Date() -0;
-    if(now-timeStamp>500){
+    var now = new Date() - 0;
+    if (now - timeStamp > 500) {
         window.clearTimeout(resizeTimeout);
-        resizeTimeout = window.setTimeout(function(){
+        resizeTimeout = window.setTimeout(function() {
             graph.resize();
-        },500);
+        }, 500);
         timeStamp = now;
     }
 };

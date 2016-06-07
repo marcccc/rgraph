@@ -4,6 +4,7 @@ define(function() {
 
     var Node = require('./node');
     var Tooltip = require('./tooltip');
+    var LineEffect = require('./lineEffect');
 
     function Line(graph) {
 
@@ -57,6 +58,13 @@ define(function() {
         _line.n1 = n1;
         _line.n2 = n2;
 
+        if (option.effect) {
+            _line.lineEffect = new LineEffect(_line.graph, {
+                sp: _sPos,
+                ep: _ePos
+            });
+        }
+
         n1.lines.push(_line);
         if (n1 !== n2) {
             n2.lines.push(_line);
@@ -71,13 +79,25 @@ define(function() {
 
     // };
 
-    Line.prototype.rePaint = function(){
+    Line.prototype.rePaint = function() {
         var _line = this;
         var _sPos = new Node(_line.graph).getCenterPos(_line.n1),
             _ePos = new Node(_line.graph).getCenterPos(_line.n2);
         var path = ['M', _sPos.x, _sPos.y, _ePos.x, _ePos.y];
-        _line.rLine = _line.rLine.attr('path',path.join(','));
+        _line.rLine = _line.rLine.attr('path', path.join(','));
     };
+    Line.prototype.resetEffect = function() {
+        var _line = this;
+        if (_line.lineEffect) {
+            var _sPos = new Node(_line.graph).getCenterPos(_line.n1),
+                _ePos = new Node(_line.graph).getCenterPos(_line.n2);
+            _line.lineEffect.setOption({
+                sp: _sPos,
+                ep: _ePos
+            });
+        }
+    };
+
 
     // TODO HOVER
     // TODO DBCLICK

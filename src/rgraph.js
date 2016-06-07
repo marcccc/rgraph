@@ -87,6 +87,7 @@ define(function(require) {
         this.rPaper.setSize(width, height);
         this.autoFit();
     };
+    
     RGraph.prototype.resize = function(){
         var width = this.dom.clientWidth;
         var height = this.dom.clientHeight;
