@@ -16,7 +16,7 @@ define(function() {
 
     Node.prototype.add = function(id, option) {
 
-        if(this.graph._nodesMap[id]){
+        if (this.graph._nodesMap[id]) {
             return this.graph._nodesMap[id];
         }
 
@@ -132,7 +132,7 @@ define(function() {
             _node.rNode.mousemove(function(e) {
                 Tooltip.repos(e);
             });
-            if(_node.rText){
+            if (_node.rText) {
                 _node.rText.mouseover(function() {
                     Tooltip.create(_hoverText);
                 });
@@ -145,7 +145,33 @@ define(function() {
 
         // TODO HOVER
         // TODO DBCLICK
-        // TODO DRAG
+
+        // DRAG
+        _node.rNode.drag(function(dx, dy, x, y, event) {
+            _node.rNode.transform(['t', _node._tx + dx / _node._zoom, _node._ty + dy / _node._zoom].join(','));
+            if(_node.rText){
+                _node.rText.transform(['t', _node._tx + dx / _node._zoom, _node._ty + dy / _node._zoom,'r',_node._textDeg].join(','));
+            }
+
+            for(var i=0,len=_node.lines.length;i<len;i++){
+                _node.lines[i].rePaint();
+            }
+
+        }, function(x, y, event) {
+            _node._zoom = _node.graph._paper.zoom;
+            _node._tx = _node.rNode._.dx;
+            _node._ty = _node.rNode._.dy;
+            _node.rNode.toFront();
+
+            if(_node.rText){
+                _node._textDeg = _node.rText._.deg;
+            }
+        }, function(event) {
+
+        });
+
+
+
 
         _node.graph.nodes.push(_node);
         _node.graph._nodesMap[id] = _node;
@@ -159,9 +185,7 @@ define(function() {
     //     console.log('node remove');
     // };
 
-    // DBCLICK
-
-    Node.prototype.getCenterPos = function(node){
+    Node.prototype.getCenterPos = function(node) {
         var bbox = node.rNode.getBBox();
         return {
             x: (bbox.x + bbox.x2) / 2,

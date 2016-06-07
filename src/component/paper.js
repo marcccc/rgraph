@@ -10,9 +10,6 @@ define(function() {
         this.option = option || {};
 
         this.init();
-
-
-
     }
     Paper.prototype.init = function() {
 
@@ -36,9 +33,6 @@ define(function() {
         RDom.addEventListener(this.graph.dom.querySelector('svg'), 'mouseup', function(e) {
             _paper.mouseupfn(e);
         });
-
-
-
     };
 
     Paper.prototype.setViewBox = function(x, y, w, h, fit) {

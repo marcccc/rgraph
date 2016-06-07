@@ -136,8 +136,6 @@ define(function(require) {
         }
         this._paper.center(new Node(this).getCenterPos(node));
     };
-
-
     RGraph.prototype.addLine = function(n1, n2, option) {
         return new Line(this).add(n1, n2, option);
     };
