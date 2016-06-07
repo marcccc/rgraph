@@ -10,7 +10,7 @@ window.setTimeout(function() {
 */
 
 // graph.addNode(new Date() + Math.random()*1000);
-var n1 = graph.addNode(new Date() + Math.random() * 1000, {
+var n1 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
     x: 200,
     y: 100,
     r: 30,
@@ -31,7 +31,7 @@ var n1 = graph.addNode(new Date() + Math.random() * 1000, {
 
 });
 
-var n2 = graph.addNode(new Date() + Math.random() * 1000, {
+var n2 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
     x: 200,
     y: 300,
     r: 30,
@@ -59,7 +59,7 @@ var n2 = graph.addNode(new Date() + Math.random() * 1000, {
     textAlign: 'right'
 });*/
 
-var n3 = graph.addNode(new Date() + +Math.random() * 1000, {
+var n3 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
     type: 'image',
     x: 600,
     y: 100,
@@ -77,7 +77,7 @@ var n3 = graph.addNode(new Date() + +Math.random() * 1000, {
     },
     hoverText: '这是图片的浮动信息'
 });
-var n4 = graph.addNode(new Date() + +Math.random() * 1000, {
+var n4 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
     type: 'image',
     x: 600,
     y: 300,
@@ -94,7 +94,10 @@ var n4 = graph.addNode(new Date() + +Math.random() * 1000, {
         'font-size': 14,
         fill: '#999'
     },
-    hoverText: '这是图片的浮动信息'
+    hoverText: '这是图片的浮动信息',
+    dbclick: function(id, text) {
+        console.log(id, text);
+    }
 });
 
 graph.addLine(n1, n2);
@@ -104,7 +107,10 @@ graph.addLine(n2, n3);
 graph.addLine(n2, n4);
 graph.addLine(n3, n4, {
     effect: true,
-    hoverText: '线的浮动信息'
+    hoverText: '线的浮动信息',
+    dbclick: function(id, n1, n2) {
+        console.log(id, n1, n2);
+    }
 });
 
 // graph.autoFit();

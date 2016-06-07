@@ -21,6 +21,7 @@ define(function() {
         }
 
         this.id = id ? id : new Date() - 0;
+
         var _node = this;
 
         var option = option || {};
@@ -35,6 +36,7 @@ define(function() {
         var _height = option.height ? option.height : 60;
 
         var _text = option.text;
+        this.text = _text;
         var _textAttr = option.textAttr ? option.textAttr : {};
         var _textAlign = option.textAlign ? option.textAlign : 'bottom';
 
@@ -145,15 +147,22 @@ define(function() {
 
         // TODO HOVER
         // TODO DBCLICK
+        if ('function' == typeof _dbclick) {
+            _node.rNode.attr('cursor', 'pointer');
+            _node.rNode.dblclick(function() {
+                _dbclick(_node.id, _text);
+            });
+        }
+
 
         // DRAG
         _node.rNode.drag(function(dx, dy, x, y, event) {
             _node.rNode.transform(['t', _node._tx + dx / _node._zoom, _node._ty + dy / _node._zoom].join(','));
-            if(_node.rText){
-                _node.rText.transform(['t', _node._tx + dx / _node._zoom, _node._ty + dy / _node._zoom,'r',_node._textDeg].join(','));
+            if (_node.rText) {
+                _node.rText.transform(['t', _node._tx + dx / _node._zoom, _node._ty + dy / _node._zoom, 'r', _node._textDeg].join(','));
             }
 
-            for(var i=0,len=_node.lines.length;i<len;i++){
+            for (var i = 0, len = _node.lines.length; i < len; i++) {
                 _node.lines[i].rePaint();
             }
 
@@ -163,20 +172,20 @@ define(function() {
             _node._ty = _node.rNode._.dy;
             _node.rNode.toFront();
 
-            if(_node.rText){
+            if (_node.rText) {
                 _node._textDeg = _node.rText._.deg;
             }
 
-            for(var i=0,len=_node.lines.length;i<len;i++){
-                if(_node.lines[i].lineEffect){
+            for (var i = 0, len = _node.lines.length; i < len; i++) {
+                if (_node.lines[i].lineEffect) {
                     _node.lines[i].lineEffect.stop();
                 }
             }
         }, function(event) {
-            for(var i=0,len=_node.lines.length;i<len;i++){
+            for (var i = 0, len = _node.lines.length; i < len; i++) {
                 _node.lines[i].resetEffect();
-                if(_node.lines[i].lineEffect){
-                    _node.lines[i].lineEffect.run();    
+                if (_node.lines[i].lineEffect) {
+                    _node.lines[i].lineEffect.run();
                 }
             }
         });

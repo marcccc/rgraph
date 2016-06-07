@@ -31,6 +31,7 @@ define(function() {
             return _line.graph._linesMap[key];
         }
 
+        _line.id = key;
         var option = option || {};
 
         var _attr = option.attr ? option.attr : {
@@ -52,6 +53,20 @@ define(function() {
             _line.rLine.mouseout(Tooltip.remove);
             _line.rLine.mousemove(function(e) {
                 Tooltip.repos(e);
+            });
+        }
+
+        var _dbclick = option.dbclick;
+        if ('function' == typeof _dbclick) {
+            _line.rLine.attr('cursor', 'pointer');
+            _line.rLine.dblclick(function() {
+                _dbclick(_line.id, {
+                    id: n1.id,
+                    text: n1.text
+                }, {
+                    id: n2.id,
+                    text: n2.text
+                });
             });
         }
 
@@ -101,7 +116,6 @@ define(function() {
 
     // TODO HOVER
     // TODO DBCLICK
-    // TODO EFFECT
 
     return Line;
 });
