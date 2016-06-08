@@ -1,13 +1,13 @@
 var graph = RGraph.init(document.querySelector('#canvas'), {});
 // console.log(graph);
 // graph.autoFit();
-/*
+
 // test loading
 graph.showLoading();
 window.setTimeout(function() {
     graph.hideLoading();
 },3000);
-*/
+
 
 // graph.addNode(new Date() + Math.random()*1000);
 var n1 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
