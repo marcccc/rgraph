@@ -65,6 +65,11 @@ graph.addLine(n3, n4, { //  n3 n4 参数为节点对象/节点ID
     hoverText: '线的浮动信息', // 浮动信息
     dbclick: function(id, n1, n2) { // 双击事件
         console.log(id, n1, n2);
+    },
+    isCurve: true, // 是否为曲线
+    text: '线上文字信息', // 线上文字信息
+    textAttr: { // 线上文字属性
+        'font-size': 14
     }
 });
 ```

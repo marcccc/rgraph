@@ -178,9 +178,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    RGraph.prototype.addNode = function(id, option) {
 	        return new Node(this).add(id, option);
 	    };
-	    // RGraph.prototype.getNodeById = function(id) {
-	    //     new Node(this).getById(id);
-	    // };
+	    RGraph.prototype.getNodeById = function(id) {
+	        return this._nodesMap[id];
+	    };
 	    // RGraph.prototype.removeNode = function(node) {
 	    //     new Node(this).remove(node);
 	    // };
@@ -739,17 +739,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        });
 
-
-
-
 	        _node.graph.nodes.push(_node);
 	        _node.graph._nodesMap[id] = _node;
 
 	        return _node;
 	    };
-	    // Node.prototype.getById = function(id) {
-	    //     console.log('get node by id : ' + id);
-	    // };
+	    
 	    // Node.prototype.remove = function(node) {
 	    //     console.log('node remove');
 	    // };
@@ -858,6 +853,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    'use strict';
 
+	    var RMath = __webpack_require__(6);
 	    var Node = __webpack_require__(5);
 	    var Tooltip = __webpack_require__(7);
 	    var LineEffect = __webpack_require__(9);
@@ -888,20 +884,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        _line.id = key;
+
 	        var option = option || {};
 
 	        var _attr = option.attr ? option.attr : {
 	            stroke: '#FF9900',
 	            'stroke-width': 2
 	        };
-
-	        var _hoverText = option.hoverText;
-
 	        var _sPos = new Node(_line.graph).getCenterPos(n1),
 	            _ePos = new Node(_line.graph).getCenterPos(n2);
-	        var path = ['M', _sPos.x, _sPos.y, _ePos.x, _ePos.y];
-	        _line.rLine = _line.graph.rPaper.path(path.join(',')).attr(_attr).toBack();
 
+	        var _isCurve = option.isCurve;
+	        _line.isCurve = _isCurve;
+
+	        if (!_isCurve) {
+	            var path = ['M', _sPos.x, _sPos.y, _ePos.x, _ePos.y];
+	            _line.rLine = _line.graph.rPaper.path(path.join(',')).attr(_attr).toBack();
+	        } else {
+	            var sAPoint = {
+	                x: _sPos.x + (_ePos.x - _sPos.x) * 0.2 + 0.12 * (_ePos.y - _sPos.y),
+	                y: _sPos.y + (_ePos.y - _sPos.y) * 0.2 - 0.12 * (_ePos.x - _sPos.x)
+	            };
+	            var eAPoint = {
+	                x: _ePos.x - (_ePos.x - _sPos.x) * 0.2 + 0.12 * (_ePos.y - _sPos.y),
+	                y: _ePos.y - (_ePos.y - _sPos.y) * 0.2 - 0.12 * (_ePos.x - _sPos.x)
+	            };
+	            var path = ['M', _sPos.x, _sPos.y, 'C', sAPoint.x, sAPoint.y, eAPoint.x, eAPoint.y, _ePos.x, _ePos.y];
+	            _line.rLine = _line.graph.rPaper.path(path.join(',')).attr(_attr).toBack();
+	        }
+
+
+	        var _text = option.text;
+	        var _textAttr = option.textAttr ? option.textAttr : {};
+	        if (_text) {
+
+	            var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
+	            _line.rText = _line.graph.rPaper.text(cPoint.x, cPoint.y, _text).attr(_textAttr);
+	            var mathAngle = RMath.transToMathAngle(cPoint.alpha%180);
+	            // var textBBox = _line.rText.getBBox();
+	            // var dist = textBBox.height / 2;
+	            _line.rText.attr({
+	                x: cPoint.x - Math.abs(Math.sin(mathAngle) * 10),
+	                y: cPoint.y - Math.abs(Math.cos(mathAngle) * 10),
+	                transform: 'r' + (cPoint.alpha % 180 > 90 ? cPoint.alpha % 180 - 180 : cPoint.alpha % 180)
+	            });
+	        }
+
+	        var _hoverText = option.hoverText;
 	        if (_hoverText) {
 	            _line.rLine.mouseover(function() {
 	                Tooltip.create(_hoverText);
@@ -954,9 +983,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var _line = this;
 	        var _sPos = new Node(_line.graph).getCenterPos(_line.n1),
 	            _ePos = new Node(_line.graph).getCenterPos(_line.n2);
-	        var path = ['M', _sPos.x, _sPos.y, _ePos.x, _ePos.y];
-	        _line.rLine = _line.rLine.attr('path', path.join(','));
+	        var path;
+	        if (!_line.isCurve) {
+	            path = ['M', _sPos.x, _sPos.y, _ePos.x, _ePos.y];
+	        } else {
+	            var sAPoint = {
+	                x: _sPos.x + (_ePos.x - _sPos.x) * 0.2 + 0.12 * (_ePos.y - _sPos.y),
+	                y: _sPos.y + (_ePos.y - _sPos.y) * 0.2 - 0.12 * (_ePos.x - _sPos.x)
+	            };
+	            var eAPoint = {
+	                x: _ePos.x - (_ePos.x - _sPos.x) * 0.2 + 0.12 * (_ePos.y - _sPos.y),
+	                y: _ePos.y - (_ePos.y - _sPos.y) * 0.2 - 0.12 * (_ePos.x - _sPos.x)
+	            };
+	            var path = ['M', _sPos.x, _sPos.y, 'C', sAPoint.x, sAPoint.y, eAPoint.x, eAPoint.y, _ePos.x, _ePos.y];
+	        }
+	        _line.rLine.attr('path', path.join(','));
+	        if (_line.rText) {
+	            var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
+	            var mathAngle = RMath.transToMathAngle(cPoint.alpha%180);
+	            // var textBBox = _line.rText.getBBox();
+	            // var dist = textBBox.height / 2;
+	            _line.rText.attr({
+	                x: cPoint.x - Math.abs(Math.sin(mathAngle) * 10),
+	                y: cPoint.y - Math.abs(Math.cos(mathAngle) * 10),
+	                transform: 'r' + (cPoint.alpha % 180 > 90 ? cPoint.alpha % 180 - 180 : cPoint.alpha % 180)
+	            });
+	        }
 	    };
+
 	    Line.prototype.resetEffect = function() {
 	        var _line = this;
 	        if (_line.lineEffect) {
@@ -968,10 +1022,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            });
 	        }
 	    };
-
-
-	    // TODO HOVER
-	    // TODO DBCLICK
 
 	    return Line;
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));

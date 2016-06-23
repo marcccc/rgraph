@@ -190,20 +190,11 @@ define(function() {
             }
         });
 
-
-
-
         _node.graph.nodes.push(_node);
         _node.graph._nodesMap[id] = _node;
 
         return _node;
     };
-    // Node.prototype.getById = function(id) {
-    //     console.log('get node by id : ' + id);
-    // };
-    // Node.prototype.remove = function(node) {
-    //     console.log('node remove');
-    // };
 
     Node.prototype.getCenterPos = function(node) {
         var bbox = node.rNode.getBBox();

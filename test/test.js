@@ -3,10 +3,10 @@ var graph = RGraph.init(document.querySelector('#canvas'), {});
 // graph.autoFit();
 
 // test loading
-graph.showLoading();
-window.setTimeout(function() {
-    graph.hideLoading();
-},3000);
+// graph.showLoading();
+// window.setTimeout(function() {
+//     graph.hideLoading();
+// },3000);
 
 
 // graph.addNode(new Date() + Math.random()*1000);
@@ -100,11 +100,29 @@ var n4 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
     }
 });
 
-graph.addLine(n1, n2);
-graph.addLine(n1, n3);
-graph.addLine(n1, n4);
-graph.addLine(n2, n3);
-graph.addLine(n2, n4);
+graph.addLine(n1, n2, {
+    text: 'n1-n2连线',
+    isCurve: true
+});
+graph.addLine(n1, n3, {
+    text: 'n1-n3连线',
+    isCurve: true
+});
+graph.addLine(n1, n4, {
+    text: 'n1-n4连线',
+    isCurve: true
+});
+graph.addLine(n2, n3, {
+    text: 'n2-n3连线',
+    textAttr: {
+        'font-size': 24,
+        fill: 'red'
+    },
+    isCurve: true
+});
+graph.addLine(n2, n4, {
+    isCurve: true
+});
 graph.addLine(n3, n4, {
     effect: true,
     hoverText: '线的浮动信息',

@@ -122,9 +122,9 @@ define(function(require) {
     RGraph.prototype.addNode = function(id, option) {
         return new Node(this).add(id, option);
     };
-    // RGraph.prototype.getNodeById = function(id) {
-    //     new Node(this).getById(id);
-    // };
+    RGraph.prototype.getNodeById = function(id) {
+        return this._nodesMap[id];
+    };
     // RGraph.prototype.removeNode = function(node) {
     //     new Node(this).remove(node);
     // };
