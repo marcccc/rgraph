@@ -731,6 +731,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	        }, function(event) {
+	            if (_node.rText) {
+	                _node.rText.toFront();
+	            }
+
 	            for (var i = 0, len = _node.lines.length; i < len; i++) {
 	                _node.lines[i].resetEffect();
 	                if (_node.lines[i].lineEffect) {
@@ -744,10 +748,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        return _node;
 	    };
-	    
-	    // Node.prototype.remove = function(node) {
-	    //     console.log('node remove');
-	    // };
 
 	    Node.prototype.getCenterPos = function(node) {
 	        var bbox = node.rNode.getBBox();

@@ -182,6 +182,10 @@ define(function() {
                 }
             }
         }, function(event) {
+            if (_node.rText) {
+                _node.rText.toFront();
+            }
+
             for (var i = 0, len = _node.lines.length; i < len; i++) {
                 _node.lines[i].resetEffect();
                 if (_node.lines[i].lineEffect) {

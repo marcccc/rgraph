@@ -70,7 +70,7 @@ var n3 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
         // opacity: 0.7
     },
     text: '这是图片',
-    textAlign: 'bottom',
+    textAlign: 'center',
     textAttr: {
         'font-size': 14,
         fill: '#999'
