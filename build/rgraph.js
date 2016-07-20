@@ -143,13 +143,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.rPaper.setSize(width, height);
 	        this.autoFit();
 	    };
-	    
-	    RGraph.prototype.resize = function(){
+
+	    RGraph.prototype.resize = function() {
 	        var width = this.dom.clientWidth;
 	        var height = this.dom.clientHeight;
 	        this.setSize(width, height);
 	    };
-	    RGraph.prototype.autoFit = function(){
+	    RGraph.prototype.autoFit = function() {
 	        var coord = {
 	            minx: Number.MAX_VALUE,
 	            miny: Number.MAX_VALUE,
@@ -168,10 +168,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._paper.autoFit(coord);
 	        }
 	    };
-	    RGraph.prototype.clear = function(){
+	    RGraph.prototype.clear = function() {
 	        // TODO
 	    };
-	    RGraph.prototype.dispose = function(){
+	    RGraph.prototype.dispose = function() {
 	        // TODO
 	    }
 
@@ -185,14 +185,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //     new Node(this).remove(node);
 	    // };
 	    RGraph.prototype.centerNode = function(node) {
-	        if(typeof(node) == 'string'){
+	        if (typeof(node) == 'string') {
 	            node = this._nodesMap[node];
 	        }
-	        if(!node){
+	        if (!node) {
 	            return;
 	        }
 	        this._paper.center(new Node(this).getCenterPos(node));
 	    };
+	    RGraph.prototype.centerPos = function(pos) {
+	        this._paper.center(pos);
+	    }
 	    RGraph.prototype.addLine = function(n1, n2, option) {
 	        return new Line(this).add(n1, n2, option);
 	    };
@@ -429,12 +432,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var yZoom = this.graph.height / (coord.maxy - coord.miny);
 	        var zoom = xZoom < yZoom ? xZoom : yZoom;
 	        //为了留出边距
-	        // zoom = zoom * this.options.zoomprop;
-	        // if (this.options.maxzoom) {
-	        //     if (zoom > this.options.maxzoom) {
-	        //         zoom = this.options.maxzoom;
-	        //     }
-	        // }
+	        if (this.graph.option.zoomprop) {
+	            zoom = zoom * this.graph.option.zoomprop;
+	        }
+
+	        if (this.graph.option.automaxzoom) {
+	            if (zoom > this.graph.option.automaxzoom) {
+	                zoom = this.graph.option.automaxzoom;
+	            }
+	        }
 	        this.zoom = zoom;
 	        this.setViewBox(
 	            centerPos.x - this.graph.width / this.zoom / 2,
@@ -698,7 +704,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // TODO DBCLICK
 	        if ('function' == typeof _dbclick) {
 	            _node.rNode.attr('cursor', 'pointer');
+	            console.log(_node.rNode);
 	            _node.rNode.dblclick(function() {
+	                console.log(_node.id, _text);
+	                _dbclick(_node.id, _text);
+	            });
+	            _node.rText.dblclick(function() {
+	                console.log(_node.id, _text);
 	                _dbclick(_node.id, _text);
 	            });
 	        }
@@ -719,7 +731,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _node._zoom = _node.graph._paper.zoom;
 	            _node._tx = _node.rNode._.dx;
 	            _node._ty = _node.rNode._.dy;
-	            _node.rNode.toFront();
+	            // _node.rNode.toFront();
 
 	            if (_node.rText) {
 	                _node._textDeg = _node.rText._.deg;
@@ -732,7 +744,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        }, function(event) {
 	            if (_node.rText) {
-	                _node.rText.toFront();
+	                // _node.rText.toFront();
 	            }
 
 	            for (var i = 0, len = _node.lines.length; i < len; i++) {

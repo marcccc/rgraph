@@ -142,12 +142,15 @@ define(function() {
         var yZoom = this.graph.height / (coord.maxy - coord.miny);
         var zoom = xZoom < yZoom ? xZoom : yZoom;
         //为了留出边距
-        // zoom = zoom * this.options.zoomprop;
-        // if (this.options.maxzoom) {
-        //     if (zoom > this.options.maxzoom) {
-        //         zoom = this.options.maxzoom;
-        //     }
-        // }
+        if (this.graph.option.zoomprop) {
+            zoom = zoom * this.graph.option.zoomprop;
+        }
+
+        if (this.graph.option.automaxzoom) {
+            if (zoom > this.graph.option.automaxzoom) {
+                zoom = this.graph.option.automaxzoom;
+            }
+        }
         this.zoom = zoom;
         this.setViewBox(
             centerPos.x - this.graph.width / this.zoom / 2,

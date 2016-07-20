@@ -152,6 +152,9 @@ define(function() {
             _node.rNode.dblclick(function() {
                 _dbclick(_node.id, _text);
             });
+            _node.rText.dblclick(function() {
+                _dbclick(_node.id, _text);
+            });
         }
 
 
@@ -170,7 +173,7 @@ define(function() {
             _node._zoom = _node.graph._paper.zoom;
             _node._tx = _node.rNode._.dx;
             _node._ty = _node.rNode._.dy;
-            _node.rNode.toFront();
+            // _node.rNode.toFront();
 
             if (_node.rText) {
                 _node._textDeg = _node.rText._.deg;
@@ -183,7 +186,7 @@ define(function() {
             }
         }, function(event) {
             if (_node.rText) {
-                _node.rText.toFront();
+                // _node.rText.toFront();
             }
 
             for (var i = 0, len = _node.lines.length; i < len; i++) {

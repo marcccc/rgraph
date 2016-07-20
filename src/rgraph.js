@@ -87,13 +87,13 @@ define(function(require) {
         this.rPaper.setSize(width, height);
         this.autoFit();
     };
-    
-    RGraph.prototype.resize = function(){
+
+    RGraph.prototype.resize = function() {
         var width = this.dom.clientWidth;
         var height = this.dom.clientHeight;
         this.setSize(width, height);
     };
-    RGraph.prototype.autoFit = function(){
+    RGraph.prototype.autoFit = function() {
         var coord = {
             minx: Number.MAX_VALUE,
             miny: Number.MAX_VALUE,
@@ -112,10 +112,10 @@ define(function(require) {
             this._paper.autoFit(coord);
         }
     };
-    RGraph.prototype.clear = function(){
+    RGraph.prototype.clear = function() {
         // TODO
     };
-    RGraph.prototype.dispose = function(){
+    RGraph.prototype.dispose = function() {
         // TODO
     }
 
@@ -129,14 +129,17 @@ define(function(require) {
     //     new Node(this).remove(node);
     // };
     RGraph.prototype.centerNode = function(node) {
-        if(typeof(node) == 'string'){
+        if (typeof(node) == 'string') {
             node = this._nodesMap[node];
         }
-        if(!node){
+        if (!node) {
             return;
         }
         this._paper.center(new Node(this).getCenterPos(node));
     };
+    RGraph.prototype.centerPos = function(pos) {
+        this._paper.center(pos);
+    }
     RGraph.prototype.addLine = function(n1, n2, option) {
         return new Line(this).add(n1, n2, option);
     };
