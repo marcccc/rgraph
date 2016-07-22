@@ -48,7 +48,7 @@ define(function() {
         this.showLoading = function() {
             var _loading = dom.querySelector(".rgraph-loading");
             if (_loading) {
-                dom.removeChild(loading);
+                dom.removeChild(_loading);
             }
             var width = dom.clientWidth;
             var height = dom.clientHeight;

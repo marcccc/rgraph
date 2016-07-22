@@ -3,7 +3,7 @@ var graph = RGraph.init(document.querySelector('#canvas'), {});
 // graph.autoFit();
 
 // test loading
-// graph.showLoading();
+graph.showLoading();
 // window.setTimeout(function() {
 //     graph.hideLoading();
 // },3000);

@@ -267,7 +267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.showLoading = function() {
 	            var _loading = dom.querySelector(".rgraph-loading");
 	            if (_loading) {
-	                dom.removeChild(loading);
+	                dom.removeChild(_loading);
 	            }
 	            var width = dom.clientWidth;
 	            var height = dom.clientHeight;
@@ -704,13 +704,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // TODO DBCLICK
 	        if ('function' == typeof _dbclick) {
 	            _node.rNode.attr('cursor', 'pointer');
-	            console.log(_node.rNode);
 	            _node.rNode.dblclick(function() {
-	                console.log(_node.id, _text);
 	                _dbclick(_node.id, _text);
 	            });
 	            _node.rText.dblclick(function() {
-	                console.log(_node.id, _text);
 	                _dbclick(_node.id, _text);
 	            });
 	        }
