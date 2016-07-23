@@ -206,9 +206,24 @@ define(function() {
     Node.prototype.getCenterPos = function(node) {
         var bbox = node.rNode.getBBox();
         return {
-            x: (bbox.x + bbox.x2) / 2,
-            y: (bbox.y + bbox.y2) / 2
+            x: parseInt((bbox.x + bbox.x2) / 2, 10),
+            y: parseInt((bbox.y + bbox.y2) / 2, 10)
         };
+    };
+
+    Node.prototype.attr = function(type, value) {
+        var _node = this;
+        if ('string' == typeof type) {
+            if ('text' == type) {
+                if ('undefined' == typeof value) {
+                    return _node.text;
+                } else {
+                    _node.text = value;
+                    _node.rText.attr('text', value);
+                }
+            }
+        }
     }
+
     return Node;
 });

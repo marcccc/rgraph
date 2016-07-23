@@ -139,6 +139,9 @@ define(function(require) {
     // RGraph.prototype.removeNode = function(node) {
     //     new Node(this).remove(node);
     // };
+    RGraph.prototype.getNodes = function(){
+        return this.nodes;
+    };
     RGraph.prototype.centerNode = function(node) {
         if (typeof(node) == 'string') {
             node = this._nodesMap[node];

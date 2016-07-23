@@ -195,6 +195,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // RGraph.prototype.removeNode = function(node) {
 	    //     new Node(this).remove(node);
 	    // };
+	    RGraph.prototype.getNodes = function(){
+	        return this.nodes;
+	    };
 	    RGraph.prototype.centerNode = function(node) {
 	        if (typeof(node) == 'string') {
 	            node = this._nodesMap[node];
@@ -772,10 +775,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Node.prototype.getCenterPos = function(node) {
 	        var bbox = node.rNode.getBBox();
 	        return {
-	            x: (bbox.x + bbox.x2) / 2,
-	            y: (bbox.y + bbox.y2) / 2
+	            x: parseInt((bbox.x + bbox.x2) / 2, 10),
+	            y: parseInt((bbox.y + bbox.y2) / 2, 10)
 	        };
+	    };
+
+	    Node.prototype.attr = function(type, value) {
+	        var _node = this;
+	        if ('string' == typeof type) {
+	            if ('text' == type) {
+	                if ('undefined' == typeof value) {
+	                    return _node.text;
+	                } else {
+	                    _node.text = value;
+	                    _node.rText.attr('text', value);
+	                }
+	            }
+	        }
 	    }
+
 	    return Node;
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
