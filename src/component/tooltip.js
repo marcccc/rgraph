@@ -47,7 +47,9 @@ define(function() {
 
     function remove() {
         var tip = document.querySelector('.rgraph-tooltip');
-        document.body.removeChild(tip);
+        if(tip){
+            document.body.removeChild(tip);    
+        }
     }
 
     return {

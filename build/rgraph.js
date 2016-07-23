@@ -63,6 +63,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var Paper = __webpack_require__(3);
 	    var Node = __webpack_require__(5);
 	    var Line = __webpack_require__(8);
+	    var Tooltip = __webpack_require__(7);
 
 	    var _idBase = new Date() - 0;
 	    var _instances = {};
@@ -172,7 +173,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // TODO
 	    };
 	    RGraph.prototype.dispose = function() {
-	        // TODO
+	        this.dom.innerHTML = '';
+	        this.nodes = [];
+	        this.lines = [];
+
+	        this._nodesMap = {};
+	        this._linesMap = {};
+
+	        this._animateNodes = [];
+
+	        // 清理浮动
+	        Tooltip.remove();
 	    }
 
 	    RGraph.prototype.addNode = function(id, option) {
@@ -689,15 +700,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _node.rNode.mousemove(function(e) {
 	                Tooltip.repos(e);
 	            });
-	            if (_node.rText) {
-	                _node.rText.mouseover(function() {
-	                    Tooltip.create(_hoverText);
-	                });
-	                _node.rText.mouseout(Tooltip.remove);
-	                _node.rText.mousemove(function(e) {
-	                    Tooltip.repos(e);
-	                });
-	            }
+	            // if (_node.rText) {
+	            //     _node.rText.mouseover(function() {
+	            //         Tooltip.create(_hoverText);
+	            //     });
+	            //     _node.rText.mouseout(Tooltip.remove);
+	            //     _node.rText.mousemove(function(e) {
+	            //         Tooltip.repos(e);
+	            //     });
+	            // }
 	        }
 
 	        // TODO HOVER
@@ -843,7 +854,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    function remove() {
 	        var tip = document.querySelector('.rgraph-tooltip');
-	        document.body.removeChild(tip);
+	        if(tip){
+	            document.body.removeChild(tip);    
+	        }
 	    }
 
 	    return {

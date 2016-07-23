@@ -134,15 +134,15 @@ define(function() {
             _node.rNode.mousemove(function(e) {
                 Tooltip.repos(e);
             });
-            if (_node.rText) {
-                _node.rText.mouseover(function() {
-                    Tooltip.create(_hoverText);
-                });
-                _node.rText.mouseout(Tooltip.remove);
-                _node.rText.mousemove(function(e) {
-                    Tooltip.repos(e);
-                });
-            }
+            // if (_node.rText) {
+            //     _node.rText.mouseover(function() {
+            //         Tooltip.create(_hoverText);
+            //     });
+            //     _node.rText.mouseout(Tooltip.remove);
+            //     _node.rText.mousemove(function(e) {
+            //         Tooltip.repos(e);
+            //     });
+            // }
         }
 
         // TODO HOVER

@@ -7,6 +7,7 @@ define(function(require) {
     var Paper = require('./component/paper');
     var Node = require('./component/node');
     var Line = require('./component/line');
+    var Tooltip = require('./component/tooltip');
 
     var _idBase = new Date() - 0;
     var _instances = {};
@@ -116,7 +117,17 @@ define(function(require) {
         // TODO
     };
     RGraph.prototype.dispose = function() {
-        // TODO
+        this.dom.innerHTML = '';
+        this.nodes = [];
+        this.lines = [];
+
+        this._nodesMap = {};
+        this._linesMap = {};
+
+        this._animateNodes = [];
+
+        // 清理浮动
+        Tooltip.remove();
     }
 
     RGraph.prototype.addNode = function(id, option) {
