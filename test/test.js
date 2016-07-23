@@ -3,7 +3,7 @@ var graph = RGraph.init(document.querySelector('#canvas'), {});
 // graph.autoFit();
 
 // test loading
-graph.showLoading();
+// graph.showLoading();
 // window.setTimeout(function() {
 //     graph.hideLoading();
 // },3000);
@@ -97,9 +97,13 @@ var n4 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
     hoverText: '这是图片的浮动信息',
     dbclick: function(id, text) {
         console.log(id, text);
+    },
+    data: {
+        test: 111
     }
 });
 
+console.log(n4);
 graph.addLine(n1, n2, {
     text: 'n1-n2连线',
     isCurve: true
@@ -133,7 +137,7 @@ graph.addLine(n3, n4, {
 
 // graph.autoFit();
 
-// graph.centerNode(n4);
+graph.centerNode(n1);
 
 var resizeTimeout = 0;
 var timeStamp = new Date() - 0;

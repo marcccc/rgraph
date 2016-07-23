@@ -187,31 +187,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    RGraph.prototype.addNode = function(id, option) {
-	        return new Node(this).add(id, option);
+	        return new Node(this, id, option);
 	    };
 	    RGraph.prototype.getNodeById = function(id) {
 	        return this._nodesMap[id];
 	    };
 	    // RGraph.prototype.removeNode = function(node) {
-	    //     new Node(this).remove(node);
+	        // if (typeof(node) == 'string') {
+	        //     node = this.getNodeById(node);
+	        // }
+	        // if (!node) {
+	        //     return;
+	        // }
+	        // node.remove();
 	    // };
-	    RGraph.prototype.getNodes = function(){
+	    RGraph.prototype.getNodes = function() {
 	        return this.nodes;
 	    };
 	    RGraph.prototype.centerNode = function(node) {
 	        if (typeof(node) == 'string') {
-	            node = this._nodesMap[node];
+	            node = this.getNodeById(node);
 	        }
 	        if (!node) {
 	            return;
 	        }
-	        this._paper.center(new Node(this).getCenterPos(node));
+	        this._paper.center(node.getCenterPos());
 	    };
 	    RGraph.prototype.centerPos = function(pos) {
 	        this._paper.center(pos);
 	    }
 	    RGraph.prototype.addLine = function(n1, n2, option) {
-	        return new Line(this).add(n1, n2, option);
+	        return new Line(this,n1,n2,option);
 	    };
 
 
@@ -576,14 +582,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var padding = 0; // 文字与图形间的间距
 
-	    function Node(graph) {
+	    function Node(graph, id, option) {
 
 	        this.graph = graph; // RGraph Object
 
 	        this.lines = [];
+
+	        this._add(id, option);
 	    }
 
-	    Node.prototype.add = function(id, option) {
+	    Node.prototype._add = function(id, option) {
 
 	        if (this.graph._nodesMap[id]) {
 	            return this.graph._nodesMap[id];
@@ -594,6 +602,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var _node = this;
 
 	        var option = option || {};
+	        _node.data = option.data;
 
 	        var _type = option.type ? option.type : 'circle';
 	        var _x = option.x ? option.x : 0;
@@ -773,7 +782,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    Node.prototype.getCenterPos = function(node) {
-	        var bbox = node.rNode.getBBox();
+	        var _node = node;
+	        if (!_node) {
+	            _node = this;
+	        }
+	        var bbox = _node.rNode.getBBox();
 	        return {
 	            x: parseInt((bbox.x + bbox.x2) / 2, 10),
 	            y: parseInt((bbox.y + bbox.y2) / 2, 10)
@@ -898,13 +911,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var Tooltip = __webpack_require__(7);
 	    var LineEffect = __webpack_require__(9);
 
-	    function Line(graph) {
+	    function Line(graph, n1, n2, option) {
 
 	        this.graph = graph; // RGraph Object
 
+	        this._add(n1, n2, option);
 
 	    }
-	    Line.prototype.add = function(n1, n2, option) {
+	    Line.prototype._add = function(n1, n2, option) {
 	        var _line = this;
 	        if (typeof(n1) == 'string') {
 	            n1 = _line.graph._nodesMap[n1];
@@ -926,13 +940,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _line.id = key;
 
 	        var option = option || {};
-
+	        _line.data = option.data;
+	        
 	        var _attr = option.attr ? option.attr : {
 	            stroke: '#FF9900',
 	            'stroke-width': 2
 	        };
-	        var _sPos = new Node(_line.graph).getCenterPos(n1),
-	            _ePos = new Node(_line.graph).getCenterPos(n2);
+	        var _sPos = n1.getCenterPos(),
+	            _ePos = n2.getCenterPos();
 
 	        var _isCurve = option.isCurve;
 	        _line.isCurve = _isCurve;
@@ -960,7 +975,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
 	            _line.rText = _line.graph.rPaper.text(cPoint.x, cPoint.y, _text).attr(_textAttr);
-	            var mathAngle = RMath.transToMathAngle(cPoint.alpha%180);
+	            var mathAngle = RMath.transToMathAngle(cPoint.alpha % 180);
 	            // var textBBox = _line.rText.getBBox();
 	            // var dist = textBBox.height / 2;
 	            _line.rText.attr({
@@ -1040,7 +1055,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _line.rLine.attr('path', path.join(','));
 	        if (_line.rText) {
 	            var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
-	            var mathAngle = RMath.transToMathAngle(cPoint.alpha%180);
+	            var mathAngle = RMath.transToMathAngle(cPoint.alpha % 180);
 	            // var textBBox = _line.rText.getBBox();
 	            // var dist = textBBox.height / 2;
 	            _line.rText.attr({

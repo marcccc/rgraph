@@ -131,31 +131,37 @@ define(function(require) {
     }
 
     RGraph.prototype.addNode = function(id, option) {
-        return new Node(this).add(id, option);
+        return new Node(this, id, option);
     };
     RGraph.prototype.getNodeById = function(id) {
         return this._nodesMap[id];
     };
     // RGraph.prototype.removeNode = function(node) {
-    //     new Node(this).remove(node);
+        // if (typeof(node) == 'string') {
+        //     node = this.getNodeById(node);
+        // }
+        // if (!node) {
+        //     return;
+        // }
+        // node.remove();
     // };
-    RGraph.prototype.getNodes = function(){
+    RGraph.prototype.getNodes = function() {
         return this.nodes;
     };
     RGraph.prototype.centerNode = function(node) {
         if (typeof(node) == 'string') {
-            node = this._nodesMap[node];
+            node = this.getNodeById(node);
         }
         if (!node) {
             return;
         }
-        this._paper.center(new Node(this).getCenterPos(node));
+        this._paper.center(node.getCenterPos());
     };
     RGraph.prototype.centerPos = function(pos) {
         this._paper.center(pos);
     }
     RGraph.prototype.addLine = function(n1, n2, option) {
-        return new Line(this).add(n1, n2, option);
+        return new Line(this,n1,n2,option);
     };
 
 

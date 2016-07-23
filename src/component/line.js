@@ -7,13 +7,14 @@ define(function() {
     var Tooltip = require('./tooltip');
     var LineEffect = require('./lineEffect');
 
-    function Line(graph) {
+    function Line(graph, n1, n2, option) {
 
         this.graph = graph; // RGraph Object
 
+        this._add(n1, n2, option);
 
     }
-    Line.prototype.add = function(n1, n2, option) {
+    Line.prototype._add = function(n1, n2, option) {
         var _line = this;
         if (typeof(n1) == 'string') {
             n1 = _line.graph._nodesMap[n1];
@@ -35,13 +36,14 @@ define(function() {
         _line.id = key;
 
         var option = option || {};
-
+        _line.data = option.data;
+        
         var _attr = option.attr ? option.attr : {
             stroke: '#FF9900',
             'stroke-width': 2
         };
-        var _sPos = new Node(_line.graph).getCenterPos(n1),
-            _ePos = new Node(_line.graph).getCenterPos(n2);
+        var _sPos = n1.getCenterPos(),
+            _ePos = n2.getCenterPos();
 
         var _isCurve = option.isCurve;
         _line.isCurve = _isCurve;
@@ -69,7 +71,7 @@ define(function() {
 
             var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
             _line.rText = _line.graph.rPaper.text(cPoint.x, cPoint.y, _text).attr(_textAttr);
-            var mathAngle = RMath.transToMathAngle(cPoint.alpha%180);
+            var mathAngle = RMath.transToMathAngle(cPoint.alpha % 180);
             // var textBBox = _line.rText.getBBox();
             // var dist = textBBox.height / 2;
             _line.rText.attr({
@@ -149,7 +151,7 @@ define(function() {
         _line.rLine.attr('path', path.join(','));
         if (_line.rText) {
             var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
-            var mathAngle = RMath.transToMathAngle(cPoint.alpha%180);
+            var mathAngle = RMath.transToMathAngle(cPoint.alpha % 180);
             // var textBBox = _line.rText.getBBox();
             // var dist = textBBox.height / 2;
             _line.rText.attr({

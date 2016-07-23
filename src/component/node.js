@@ -7,14 +7,16 @@ define(function() {
 
     var padding = 0; // 文字与图形间的间距
 
-    function Node(graph) {
+    function Node(graph, id, option) {
 
         this.graph = graph; // RGraph Object
 
         this.lines = [];
+
+        this._add(id, option);
     }
 
-    Node.prototype.add = function(id, option) {
+    Node.prototype._add = function(id, option) {
 
         if (this.graph._nodesMap[id]) {
             return this.graph._nodesMap[id];
@@ -25,6 +27,7 @@ define(function() {
         var _node = this;
 
         var option = option || {};
+        _node.data = option.data;
 
         var _type = option.type ? option.type : 'circle';
         var _x = option.x ? option.x : 0;
@@ -204,7 +207,11 @@ define(function() {
     };
 
     Node.prototype.getCenterPos = function(node) {
-        var bbox = node.rNode.getBBox();
+        var _node = node;
+        if (!_node) {
+            _node = this;
+        }
+        var bbox = _node.rNode.getBBox();
         return {
             x: parseInt((bbox.x + bbox.x2) / 2, 10),
             y: parseInt((bbox.y + bbox.y2) / 2, 10)
