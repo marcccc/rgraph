@@ -130,6 +130,16 @@ graph.addLine(n2, n4, {
 graph.addLine(n3, n4, {
     effect: true,
     hoverText: '线的浮动信息',
+    mark: {
+        width: 30,
+        height: 10,
+        attr: {
+            'stroke-width': 0,
+            'stroke-opacity': 0.5,
+            'fill': '#00CC00',
+            'opacity': 0.5
+        }
+    },
     dbclick: function(id, n1, n2) {
         console.log(id, n1, n2);
     }

@@ -37,7 +37,7 @@ define(function() {
 
         var option = option || {};
         _line.data = option.data;
-        
+
         var _attr = option.attr ? option.attr : {
             stroke: '#FF9900',
             'stroke-width': 2
@@ -51,6 +51,28 @@ define(function() {
         if (!_isCurve) {
             var path = ['M', _sPos.x, _sPos.y, _ePos.x, _ePos.y];
             _line.rLine = _line.graph.rPaper.path(path.join(',')).attr(_attr).toBack();
+
+            var _mark = option.mark;
+            if (_mark) {
+                if (!_mark.type || _mark.type == 'rect') {
+                    var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
+                    var width = _mark.width || 30;
+                    var height = _mark.height || 10;
+                    var markAttr = _mark.attr || {
+                        'stroke-width': 0,
+                        'stroke-opacity': 0.5,
+                        'fill': '#00CC00',
+                        'opacity': 0.5
+                    };
+                    _line.rLineMark = _line.graph.rPaper.rect(cPoint.x - width / 2, cPoint.y - height / 2, width, height).attr(markAttr).attr({
+                        transform: 'r' + cPoint.alpha % 180
+                    });
+                    _line.markWidth = width;
+                    _line.markHeight = height;
+                }
+            }
+
+
         } else {
             var sAPoint = {
                 x: _sPos.x + (_ePos.x - _sPos.x) * 0.2 + 0.12 * (_ePos.y - _sPos.y),
@@ -72,8 +94,6 @@ define(function() {
             var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
             _line.rText = _line.graph.rPaper.text(cPoint.x, cPoint.y, _text).attr(_textAttr);
             var mathAngle = RMath.transToMathAngle(cPoint.alpha % 180);
-            // var textBBox = _line.rText.getBBox();
-            // var dist = textBBox.height / 2;
             _line.rText.attr({
                 x: cPoint.x - Math.abs(Math.sin(mathAngle) * 10),
                 y: cPoint.y - Math.abs(Math.cos(mathAngle) * 10),
@@ -158,6 +178,16 @@ define(function() {
                 x: cPoint.x - Math.abs(Math.sin(mathAngle) * 10),
                 y: cPoint.y - Math.abs(Math.cos(mathAngle) * 10),
                 transform: 'r' + (cPoint.alpha % 180 > 90 ? cPoint.alpha % 180 - 180 : cPoint.alpha % 180)
+            });
+        }
+        if (_line.rLineMark) {
+            var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
+            var markWidth = _line.markWidth,
+                markHeight = _line.markHeight;
+            _line.rLineMark.attr({
+                x: cPoint.x - markWidth / 2,
+                y: cPoint.y - markHeight / 2,
+                transform: 'r' + cPoint.alpha % 180
             });
         }
     };
