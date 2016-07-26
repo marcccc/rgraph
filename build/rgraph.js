@@ -848,7 +848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            'padding:10px 6px',
 	            'top:0',
 	            'left:0',
-	            'zIndex:9999',
+	            'z-index:9999',
 	            'color:#fff',
 	            'border-radius:3px',
 	            'background:rgba(2,2,2,0.8)',
