@@ -1036,8 +1036,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    Line.prototype.rePaint = function() {
 	        var _line = this;
-	        var _sPos = new Node(_line.graph).getCenterPos(_line.n1),
-	            _ePos = new Node(_line.graph).getCenterPos(_line.n2);
+	        var _sPos = _line.n1.getCenterPos(),
+	            _ePos = _line.n2.getCenterPos();
 	        var path;
 	        if (!_line.isCurve) {
 	            path = ['M', _sPos.x, _sPos.y, _ePos.x, _ePos.y];
@@ -1069,8 +1069,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Line.prototype.resetEffect = function() {
 	        var _line = this;
 	        if (_line.lineEffect) {
-	            var _sPos = new Node(_line.graph).getCenterPos(_line.n1),
-	                _ePos = new Node(_line.graph).getCenterPos(_line.n2);
+	            var _sPos = _line.n1.getCenterPos(),
+	                _ePos = _line.n2.getCenterPos();
 	            _line.lineEffect.setOption({
 	                sp: _sPos,
 	                ep: _ePos
