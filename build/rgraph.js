@@ -1014,6 +1014,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _line.rLine.mousemove(function(e) {
 	                Tooltip.repos(e);
 	            });
+	            if(_line.rLineMark){
+	                _line.rLineMark.mouseover(function() {
+	                    Tooltip.create(_hoverText);
+	                });
+	                _line.rLineMark.mouseout(Tooltip.remove);
+	                _line.rLineMark.mousemove(function(e) {
+	                    Tooltip.repos(e);
+	                });
+	            }
 	        }
 
 	        var _dbclick = option.dbclick;
@@ -1028,6 +1037,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    text: n2.text
 	                });
 	            });
+	            if(_line.rLineMark){
+	                _line.rLineMark.attr('cursor', 'pointer');
+	                _line.rLineMark.dblclick(function() {
+	                    _dbclick(_line.id, {
+	                        id: n1.id,
+	                        text: n1.text
+	                    }, {
+	                        id: n2.id,
+	                        text: n2.text
+	                    });
+	                });
+	            }
 	        }
 
 	        _line.n1 = n1;
