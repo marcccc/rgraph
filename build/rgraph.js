@@ -1056,15 +1056,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        var _hoverText = option.hoverText;
-	        if (_hoverText) {
-	            _line.rLine.mouseover(function() {
+
+	        _line.rLine.mouseover(function() {
+	            if (_hoverText) {
 	                Tooltip.create(_hoverText);
-	            });
-	            _line.rLine.mouseout(Tooltip.remove);
+	            }
+	            var hoverStrokeWidth = _line.rLine.attr('stroke-width')
+	            _line.hoverStrokeWidth = hoverStrokeWidth;
+	            _line.rLine.attr('stroke-width', hoverStrokeWidth * 3);
+	        });
+	        _line.rLine.mouseout(function() {
+	            if (_hoverText) {
+	                Tooltip.remove();
+	            }
+	            _line.rLine.attr('stroke-width', _line.hoverStrokeWidth);
+	        });
+	        if (_hoverText) {
 	            _line.rLine.mousemove(function(e) {
 	                Tooltip.repos(e);
 	            });
-	            if(_line.rLineMark){
+	            if (_line.rLineMark) {
 	                _line.rLineMark.mouseover(function() {
 	                    Tooltip.create(_hoverText);
 	                });
@@ -1087,7 +1098,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    text: n2.text
 	                });
 	            });
-	            if(_line.rLineMark){
+	            if (_line.rLineMark) {
 	                _line.rLineMark.attr('cursor', 'pointer');
 	                _line.rLineMark.dblclick(function() {
 	                    _dbclick(_line.id, {
