@@ -135,6 +135,7 @@ n3.addExtend([{
     y: 100,
     src: 'image/extend.png'
 }]);
+n3.clearExtend();
 graph.addLine(n1, n2, {
     text: 'n1-n2连线',
     isCurve: true

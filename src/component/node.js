@@ -273,6 +273,14 @@ define(function() {
             }
         }
     };
-
+    Node.prototype.clearExtend = function() {
+        var _node = this;
+        if (_node.extends) {
+            for (var i = 0, len = _node.extends.length; i < len; i++) {
+                _node.extends[i].remove();
+            }
+            _node.extends = [];
+        }
+    };
     return Node;
 });
