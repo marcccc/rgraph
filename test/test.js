@@ -100,10 +100,41 @@ var n4 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
     },
     data: {
         test: 111
+    },
+    extends: {
+        type: 'image',
+        width: 30,
+        height: 30,
+        x: 600,
+        y: 300 - 30,
+        src: 'image/extend.png'
     }
 });
 
-console.log(n4);
+console.log(n3);
+n4.addExtend({
+    type: 'image',
+    width: 30,
+    height: 30,
+    x: 600 - 30,
+    y: 300,
+    src: 'image/extend.png'
+});
+n3.addExtend([{
+    type: 'image',
+    width: 30,
+    height: 30,
+    x: 600,
+    y: 100 - 30,
+    src: 'image/extend.png'
+}, {
+    type: 'image',
+    width: 30,
+    height: 30,
+    x: 600 - 30,
+    y: 100,
+    src: 'image/extend.png'
+}]);
 graph.addLine(n1, n2, {
     text: 'n1-n2连线',
     isCurve: true
