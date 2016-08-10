@@ -129,27 +129,51 @@ define(function() {
                 break;
         }
 
-        if (_hoverText) {
-            _node.rNode.mouseover(function() {
-                Tooltip.create(_hoverText);
-            });
-            _node.rNode.mouseout(Tooltip.remove);
-            _node.rNode.mousemove(function(e) {
-                Tooltip.repos(e);
-            });
-            // if (_node.rText) {
-            //     _node.rText.mouseover(function() {
-            //         Tooltip.create(_hoverText);
-            //     });
-            //     _node.rText.mouseout(Tooltip.remove);
-            //     _node.rText.mousemove(function(e) {
-            //         Tooltip.repos(e);
-            //     });
-            // }
-        }
+        var _hoverHighlight = _node.graph.option.hoverHighlight;
 
-        // TODO HOVER
-        // TODO DBCLICK
+        _node.rNode.mouseover(function() {
+
+            if (_hoverText) {
+                Tooltip.create(_hoverText);
+            }
+
+            if (_hoverHighlight) {
+                for (var i = 0, len = _node.graph.getNodes().length; i < len; i++) {
+                    _node.graph.getNodes()[i].weaken();
+                }
+                for (var i = 0, len = _node.graph.getLines().length; i < len; i++) {
+                    _node.graph.getLines()[i].weaken();
+                }
+                _node.restore();
+                for(var i=0,len=_node.lines.length;i<len;i++){
+                    var line = _node.lines[i];
+                    line.restore();
+                    line.n1.restore();
+                    line.n2.restore();
+                }
+            }
+
+        });
+        _node.rNode.mouseout(function() {
+            if (_hoverText) {
+                Tooltip.remove();
+            }
+            if (_hoverHighlight) {
+                for (var i = 0, len = _node.graph.getNodes().length; i < len; i++) {
+                    _node.graph.getNodes()[i].restore();
+                }
+                for (var i = 0, len = _node.graph.getLines().length; i < len; i++) {
+                    _node.graph.getLines()[i].restore();
+                }
+            }
+        });
+        _node.rNode.mousemove(function(e) {
+            if (_hoverText) {
+                Tooltip.repos(e);
+            }
+        });
+
+
         if ('function' == typeof _dbclick) {
             _node.rNode.attr('cursor', 'pointer');
             _node.rNode.dblclick(function() {
@@ -280,6 +304,27 @@ define(function() {
                 _node.extends[i].remove();
             }
             _node.extends = [];
+        }
+    };
+    Node.prototype.weaken = function() {
+        var _node = this;
+        var oldOpacity = _node.rNode.attr('opacity');
+        _node.rNode.oldOpacity = oldOpacity;
+        _node.rNode.attr('opacity', oldOpacity * 0.1);
+
+        if (_node.rText) {
+            oldOpacity = _node.rText.attr('opacity');
+            _node.rText.oldOpacity = oldOpacity;
+            _node.rText.attr('opacity', oldOpacity * 0.1);
+        }
+
+    };
+    Node.prototype.restore = function() {
+        var _node = this;
+        _node.rNode.attr('opacity', _node.rNode.oldOpacity);
+
+        if (_node.rText) {
+            _node.rText.attr('opacity', _node.rText.oldOpacity);
         }
     };
     return Node;

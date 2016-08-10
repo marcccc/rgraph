@@ -219,7 +219,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    RGraph.prototype.addLine = function(n1, n2, option) {
 	        return new Line(this,n1,n2,option);
 	    };
-
+	    RGraph.prototype.getLines = function(){
+	        return this.lines;
+	    };
 
 	    return self;
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -704,27 +706,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	                break;
 	        }
 
-	        if (_hoverText) {
-	            _node.rNode.mouseover(function() {
-	                Tooltip.create(_hoverText);
-	            });
-	            _node.rNode.mouseout(Tooltip.remove);
-	            _node.rNode.mousemove(function(e) {
-	                Tooltip.repos(e);
-	            });
-	            // if (_node.rText) {
-	            //     _node.rText.mouseover(function() {
-	            //         Tooltip.create(_hoverText);
-	            //     });
-	            //     _node.rText.mouseout(Tooltip.remove);
-	            //     _node.rText.mousemove(function(e) {
-	            //         Tooltip.repos(e);
-	            //     });
-	            // }
-	        }
+	        var _hoverHighlight = _node.graph.option.hoverHighlight;
 
-	        // TODO HOVER
-	        // TODO DBCLICK
+	        _node.rNode.mouseover(function() {
+
+	            if (_hoverText) {
+	                Tooltip.create(_hoverText);
+	            }
+
+	            if (_hoverHighlight) {
+	                for (var i = 0, len = _node.graph.getNodes().length; i < len; i++) {
+	                    _node.graph.getNodes()[i].weaken();
+	                }
+	                for (var i = 0, len = _node.graph.getLines().length; i < len; i++) {
+	                    _node.graph.getLines()[i].weaken();
+	                }
+	                _node.restore();
+	                for(var i=0,len=_node.lines.length;i<len;i++){
+	                    var line = _node.lines[i];
+	                    line.restore();
+	                    line.n1.restore();
+	                    line.n2.restore();
+	                }
+	            }
+
+	        });
+	        _node.rNode.mouseout(function() {
+	            if (_hoverText) {
+	                Tooltip.remove();
+	            }
+	            if (_hoverHighlight) {
+	                for (var i = 0, len = _node.graph.getNodes().length; i < len; i++) {
+	                    _node.graph.getNodes()[i].restore();
+	                }
+	                for (var i = 0, len = _node.graph.getLines().length; i < len; i++) {
+	                    _node.graph.getLines()[i].restore();
+	                }
+	            }
+	        });
+	        _node.rNode.mousemove(function(e) {
+	            if (_hoverText) {
+	                Tooltip.repos(e);
+	            }
+	        });
+
+
 	        if ('function' == typeof _dbclick) {
 	            _node.rNode.attr('cursor', 'pointer');
 	            _node.rNode.dblclick(function() {
@@ -855,6 +881,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _node.extends[i].remove();
 	            }
 	            _node.extends = [];
+	        }
+	    };
+	    Node.prototype.weaken = function() {
+	        var _node = this;
+	        var oldOpacity = _node.rNode.attr('opacity');
+	        _node.rNode.oldOpacity = oldOpacity;
+	        _node.rNode.attr('opacity', oldOpacity * 0.1);
+
+	        if (_node.rText) {
+	            oldOpacity = _node.rText.attr('opacity');
+	            _node.rText.oldOpacity = oldOpacity;
+	            _node.rText.attr('opacity', oldOpacity * 0.1);
+	        }
+
+	    };
+	    Node.prototype.restore = function() {
+	        var _node = this;
+	        _node.rNode.attr('opacity', _node.rNode.oldOpacity);
+
+	        if (_node.rText) {
+	            _node.rText.attr('opacity', _node.rText.oldOpacity);
 	        }
 	    };
 	    return Node;
@@ -1056,6 +1103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        var _hoverText = option.hoverText;
+	        var _hoverHighlight = _line.graph.option.hoverHighlight;
 
 	        _line.rLine.mouseover(function() {
 	            if (_hoverText) {
@@ -1064,26 +1112,76 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var hoverStrokeWidth = _line.rLine.attr('stroke-width')
 	            _line.hoverStrokeWidth = hoverStrokeWidth;
 	            _line.rLine.attr('stroke-width', hoverStrokeWidth * 3);
+
+	            if (_hoverHighlight) {
+	                for (var i = 0, len = _line.graph.getNodes().length; i < len; i++) {
+	                    _line.graph.getNodes()[i].weaken();
+	                }
+	                for (var i = 0, len = _line.graph.getLines().length; i < len; i++) {
+	                    _line.graph.getLines()[i].weaken();
+	                }
+	                _line.restore();
+	                _line.n1.restore();
+	                _line.n2.restore();
+	            }
 	        });
 	        _line.rLine.mouseout(function() {
 	            if (_hoverText) {
 	                Tooltip.remove();
 	            }
 	            _line.rLine.attr('stroke-width', _line.hoverStrokeWidth);
+
+	            if (_hoverHighlight) {
+	                for (var i = 0, len = _line.graph.getNodes().length; i < len; i++) {
+	                    _line.graph.getNodes()[i].restore();
+	                }
+	                for (var i = 0, len = _line.graph.getLines().length; i < len; i++) {
+	                    _line.graph.getLines()[i].restore();
+	                }
+	            }
 	        });
-	        if (_hoverText) {
-	            _line.rLine.mousemove(function(e) {
+	        _line.rLine.mousemove(function(e) {
+	            if (_hoverText) {
+	                Tooltip.repos(e);
+	            }
+	        });
+	        if (_line.rLineMark) {
+	            _line.rLineMark.mouseover(function() {
+	                Tooltip.create(_hoverText);
+
+	                var hoverStrokeWidth = _line.rLine.attr('stroke-width')
+	                _line.hoverStrokeWidth = hoverStrokeWidth;
+	                _line.rLine.attr('stroke-width', hoverStrokeWidth * 3);
+
+	                if (_hoverHighlight) {
+	                    for (var i = 0, len = _line.graph.getNodes().length; i < len; i++) {
+	                        _line.graph.getNodes()[i].weaken();
+	                    }
+	                    for (var i = 0, len = _line.graph.getLines().length; i < len; i++) {
+	                        _line.graph.getLines()[i].weaken();
+	                    }
+	                    _line.restore();
+	                    _line.n1.restore();
+	                    _line.n2.restore();
+	                }
+	            });
+	            _line.rLineMark.mouseout(function() {
+	                Tooltip.remove();
+
+	                _line.rLine.attr('stroke-width', _line.hoverStrokeWidth);
+
+	                if (_hoverHighlight) {
+	                    for (var i = 0, len = _line.graph.getNodes().length; i < len; i++) {
+	                        _line.graph.getNodes()[i].restore();
+	                    }
+	                    for (var i = 0, len = _line.graph.getLines().length; i < len; i++) {
+	                        _line.graph.getLines()[i].restore();
+	                    }
+	                }
+	            });
+	            _line.rLineMark.mousemove(function(e) {
 	                Tooltip.repos(e);
 	            });
-	            if (_line.rLineMark) {
-	                _line.rLineMark.mouseover(function() {
-	                    Tooltip.create(_hoverText);
-	                });
-	                _line.rLineMark.mouseout(Tooltip.remove);
-	                _line.rLineMark.mousemove(function(e) {
-	                    Tooltip.repos(e);
-	                });
-	            }
 	        }
 
 	        var _dbclick = option.dbclick;
@@ -1187,6 +1285,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	                sp: _sPos,
 	                ep: _ePos
 	            });
+	        }
+	    };
+
+	    Line.prototype.weaken = function() {
+	        var _line = this;
+	        var oldOpacity = _line.rLine.attr('opacity');
+	        _line.rLine.oldOpacity = oldOpacity;
+	        _line.rLine.attr('opacity', oldOpacity * 0.1);
+
+	        if (_line.rText) {
+	            oldOpacity = _line.rText.attr('opacity');
+	            _line.rText.oldOpacity = oldOpacity;
+	            _line.rText.attr('opacity', oldOpacity * 0.1);
+	        }
+
+	        if (_line.rLineMark) {
+	            oldOpacity = _line.rLineMark.attr('opacity');
+	            _line.rLineMark.oldOpacity = oldOpacity;
+	            _line.rLineMark.attr('opacity', oldOpacity * 0.1);
+	        }
+	    };
+	    Line.prototype.restore = function() {
+	        var _line = this;
+	        _line.rLine.attr('opacity', _line.rLine.oldOpacity);
+
+	        if (_line.rText) {
+	            _line.rText.attr('opacity', _line.rText.oldOpacity);
+	        }
+	        if (_line.rLineMark) {
+	            _line.rLineMark.attr('opacity', _line.rLineMark.oldOpacity);
 	        }
 	    };
 

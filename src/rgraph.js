@@ -163,7 +163,9 @@ define(function(require) {
     RGraph.prototype.addLine = function(n1, n2, option) {
         return new Line(this,n1,n2,option);
     };
-
+    RGraph.prototype.getLines = function(){
+        return this.lines;
+    };
 
     return self;
 });

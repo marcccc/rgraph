@@ -1,4 +1,6 @@
-var graph = RGraph.init(document.querySelector('#canvas'), {});
+var graph = RGraph.init(document.querySelector('#canvas'), {
+    hoverHighlight: true
+});
 // console.log(graph);
 // graph.autoFit();
 

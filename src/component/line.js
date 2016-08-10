@@ -102,6 +102,7 @@ define(function() {
         }
 
         var _hoverText = option.hoverText;
+        var _hoverHighlight = _line.graph.option.hoverHighlight;
 
         _line.rLine.mouseover(function() {
             if (_hoverText) {
@@ -110,26 +111,76 @@ define(function() {
             var hoverStrokeWidth = _line.rLine.attr('stroke-width')
             _line.hoverStrokeWidth = hoverStrokeWidth;
             _line.rLine.attr('stroke-width', hoverStrokeWidth * 3);
+
+            if (_hoverHighlight) {
+                for (var i = 0, len = _line.graph.getNodes().length; i < len; i++) {
+                    _line.graph.getNodes()[i].weaken();
+                }
+                for (var i = 0, len = _line.graph.getLines().length; i < len; i++) {
+                    _line.graph.getLines()[i].weaken();
+                }
+                _line.restore();
+                _line.n1.restore();
+                _line.n2.restore();
+            }
         });
         _line.rLine.mouseout(function() {
             if (_hoverText) {
                 Tooltip.remove();
             }
             _line.rLine.attr('stroke-width', _line.hoverStrokeWidth);
+
+            if (_hoverHighlight) {
+                for (var i = 0, len = _line.graph.getNodes().length; i < len; i++) {
+                    _line.graph.getNodes()[i].restore();
+                }
+                for (var i = 0, len = _line.graph.getLines().length; i < len; i++) {
+                    _line.graph.getLines()[i].restore();
+                }
+            }
         });
-        if (_hoverText) {
-            _line.rLine.mousemove(function(e) {
+        _line.rLine.mousemove(function(e) {
+            if (_hoverText) {
+                Tooltip.repos(e);
+            }
+        });
+        if (_line.rLineMark) {
+            _line.rLineMark.mouseover(function() {
+                Tooltip.create(_hoverText);
+
+                var hoverStrokeWidth = _line.rLine.attr('stroke-width')
+                _line.hoverStrokeWidth = hoverStrokeWidth;
+                _line.rLine.attr('stroke-width', hoverStrokeWidth * 3);
+
+                if (_hoverHighlight) {
+                    for (var i = 0, len = _line.graph.getNodes().length; i < len; i++) {
+                        _line.graph.getNodes()[i].weaken();
+                    }
+                    for (var i = 0, len = _line.graph.getLines().length; i < len; i++) {
+                        _line.graph.getLines()[i].weaken();
+                    }
+                    _line.restore();
+                    _line.n1.restore();
+                    _line.n2.restore();
+                }
+            });
+            _line.rLineMark.mouseout(function() {
+                Tooltip.remove();
+
+                _line.rLine.attr('stroke-width', _line.hoverStrokeWidth);
+
+                if (_hoverHighlight) {
+                    for (var i = 0, len = _line.graph.getNodes().length; i < len; i++) {
+                        _line.graph.getNodes()[i].restore();
+                    }
+                    for (var i = 0, len = _line.graph.getLines().length; i < len; i++) {
+                        _line.graph.getLines()[i].restore();
+                    }
+                }
+            });
+            _line.rLineMark.mousemove(function(e) {
                 Tooltip.repos(e);
             });
-            if (_line.rLineMark) {
-                _line.rLineMark.mouseover(function() {
-                    Tooltip.create(_hoverText);
-                });
-                _line.rLineMark.mouseout(Tooltip.remove);
-                _line.rLineMark.mousemove(function(e) {
-                    Tooltip.repos(e);
-                });
-            }
         }
 
         var _dbclick = option.dbclick;
@@ -233,6 +284,36 @@ define(function() {
                 sp: _sPos,
                 ep: _ePos
             });
+        }
+    };
+
+    Line.prototype.weaken = function() {
+        var _line = this;
+        var oldOpacity = _line.rLine.attr('opacity');
+        _line.rLine.oldOpacity = oldOpacity;
+        _line.rLine.attr('opacity', oldOpacity * 0.1);
+
+        if (_line.rText) {
+            oldOpacity = _line.rText.attr('opacity');
+            _line.rText.oldOpacity = oldOpacity;
+            _line.rText.attr('opacity', oldOpacity * 0.1);
+        }
+
+        if (_line.rLineMark) {
+            oldOpacity = _line.rLineMark.attr('opacity');
+            _line.rLineMark.oldOpacity = oldOpacity;
+            _line.rLineMark.attr('opacity', oldOpacity * 0.1);
+        }
+    };
+    Line.prototype.restore = function() {
+        var _line = this;
+        _line.rLine.attr('opacity', _line.rLine.oldOpacity);
+
+        if (_line.rText) {
+            _line.rText.attr('opacity', _line.rText.oldOpacity);
+        }
+        if (_line.rLineMark) {
+            _line.rLineMark.attr('opacity', _line.rLineMark.oldOpacity);
         }
     };
 
