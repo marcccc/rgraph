@@ -62,8 +62,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var Loading = __webpack_require__(2);
 	    var Paper = __webpack_require__(3);
 	    var Node = __webpack_require__(5);
-	    var Line = __webpack_require__(8);
+	    var Line = __webpack_require__(9);
 	    var Tooltip = __webpack_require__(7);
+	    var RightMenu = __webpack_require__(8);
 
 	    var _idBase = new Date() - 0;
 	    var _instances = {};
@@ -122,7 +123,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        this._init();
 
-
+	        dom.oncontextmenu = function(){
+	            return false;
+	        };
+	        document.onclick = function(){
+	            RightMenu.remove();
+	        };
 	    }
 
 	    RGraph.prototype._init = function() {
@@ -581,6 +587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var RMath = __webpack_require__(6);
 	    var Tooltip = __webpack_require__(7);
+	    var RightMenu = __webpack_require__(8);
 
 	    var padding = 0; // 文字与图形间的间距
 
@@ -706,8 +713,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                break;
 	        }
 
+	        // hover begin
 	        var _hoverHighlight = _node.graph.option.hoverHighlight;
-
 	        _node.rNode.mouseover(function() {
 
 	            if (_hoverText) {
@@ -722,7 +729,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    _node.graph.getLines()[i].weaken();
 	                }
 	                _node.restore();
-	                for(var i=0,len=_node.lines.length;i<len;i++){
+	                for (var i = 0, len = _node.lines.length; i < len; i++) {
 	                    var line = _node.lines[i];
 	                    line.restore();
 	                    line.n1.restore();
@@ -749,8 +756,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                Tooltip.repos(e);
 	            }
 	        });
+	        // hover end
 
-
+	        // dbclick begin
 	        if ('function' == typeof _dbclick) {
 	            _node.rNode.attr('cursor', 'pointer');
 	            _node.rNode.dblclick(function() {
@@ -760,7 +768,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _dbclick(_node.id, _text);
 	            });
 	        }
+	        // dbclick end
 
+	        // rightclick begin 
+	        if (option.rightMenu) {
+	            _node.rNode.mousedown(function(e) {
+	                e = e || window.event;
+	                if (e.button != 2) {
+	                    return;
+	                }
+	                RightMenu.create(_node.id, _text, option.rightMenu);
+	                RightMenu.repos(e);
+	            });
+	        }
+	        // rightclick end
+
+	        // extends begin
 	        var _extends = option.extends;
 	        if (_extends) {
 	            if ('object' == typeof _extends) {
@@ -778,8 +801,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	        }
+	        // extends end
 
-	        // DRAG
+	        // drag begin 
 	        _node.rNode.drag(function(dx, dy, x, y, event) {
 	            _node.rNode.transform(['t', _node._tx + dx / _node._zoom, _node._ty + dy / _node._zoom].join(','));
 	            if (_node.rText) {
@@ -823,6 +847,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	        });
+	        // drag end
+
 
 	        _node.graph.nodes.push(_node);
 	        _node.graph._nodesMap[id] = _node;
@@ -1003,10 +1029,81 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    'use strict';
 
+	    function create(id, name, menus) {
+
+	        remove();
+
+	        var rightMenu = document.createElement('ul');
+	        rightMenu.className = 'rgraph-rightmenu';
+	        var styles = ['position:absolute', 'left: 0', 'top: 0', 'margin:0', 'padding:0', 'border-radius: 3px', 'zIndex: 99', 'background:#e0e0e0', 'border:1px solid #ddd', 'list-style:none'];
+	        rightMenu.setAttribute('style', styles.join(';'));
+
+	        var liStyles = ['border-left:1px solid #fff', 'font-size:12px', 'color:#333', 'margin:3px 3px 3px 15px', 'padding:6px 20px 6px 6px', 'font-weight:bold', 'cursor:pointer'];
+	        for (var i = 0, len = menus.length; i < len; i++) {
+	            var li = document.createElement('li');
+	            li.setAttribute('style', liStyles.join(';'));
+	            li.setAttribute('onmouseover', 'this.style.background="#146AFF";this.style.color="#fff"');
+	            li.setAttribute('onmouseout', 'this.style.background="none";this.style.color="#333"');
+	            li.innerHTML = menus[i].name;
+	            if ('function' == typeof menus[i].func) {
+	                (function(callback){
+	                    li.onclick = function(){
+	                        callback(id, name);   
+	                    };
+	                })(menus[i].func);
+	            }
+	            rightMenu.appendChild(li);
+	        }
+
+	        document.body.appendChild(rightMenu);
+	    }
+
+	    function repos(e) {
+
+	        var rightMenu = document.querySelector('.rgraph-rightmenu');
+	        var fx = e.x;
+	        var fy = e.y;
+	        if (e.pageX && e.pageY) {
+	            fx = e.pageX;
+	            fy = e.pageY;
+	        } else {
+	            fx = e.clientX + document.body.scrollLeft - document.body.clientLeft;
+	            fy = e.clientY + document.body.scrollTop - document.body.clientTop;
+	        }
+
+	        rightMenu.style.display = 'block';
+	        rightMenu.style.left = fx + 2 + 'px';
+	        rightMenu.style.top = fy + 'px';
+
+	    }
+
+	    function remove() {
+	        var rightMenu = document.querySelector('.rgraph-rightmenu');
+	        if (rightMenu) {
+	            document.body.removeChild(rightMenu);
+	        }
+	    }
+
+	    return {
+	        create: create,
+	        repos: repos,
+	        remove: remove
+	    };
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+
+	    'use strict';
+
 	    var RMath = __webpack_require__(6);
 	    var Node = __webpack_require__(5);
 	    var Tooltip = __webpack_require__(7);
-	    var LineEffect = __webpack_require__(9);
+	    var LineEffect = __webpack_require__(10);
 
 	    function Line(graph, n1, n2, option) {
 
@@ -1323,7 +1420,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {

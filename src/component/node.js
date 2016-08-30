@@ -4,6 +4,7 @@ define(function() {
 
     var RMath = require('../util/rMath');
     var Tooltip = require('./tooltip');
+    var RightMenu = require('./rightmenu');
 
     var padding = 0; // 文字与图形间的间距
 
@@ -129,8 +130,8 @@ define(function() {
                 break;
         }
 
+        // hover begin
         var _hoverHighlight = _node.graph.option.hoverHighlight;
-
         _node.rNode.mouseover(function() {
 
             if (_hoverText) {
@@ -145,7 +146,7 @@ define(function() {
                     _node.graph.getLines()[i].weaken();
                 }
                 _node.restore();
-                for(var i=0,len=_node.lines.length;i<len;i++){
+                for (var i = 0, len = _node.lines.length; i < len; i++) {
                     var line = _node.lines[i];
                     line.restore();
                     line.n1.restore();
@@ -172,8 +173,9 @@ define(function() {
                 Tooltip.repos(e);
             }
         });
+        // hover end
 
-
+        // dbclick begin
         if ('function' == typeof _dbclick) {
             _node.rNode.attr('cursor', 'pointer');
             _node.rNode.dblclick(function() {
@@ -183,7 +185,22 @@ define(function() {
                 _dbclick(_node.id, _text);
             });
         }
+        // dbclick end
 
+        // rightclick begin 
+        if (option.rightMenu) {
+            _node.rNode.mousedown(function(e) {
+                e = e || window.event;
+                if (e.button != 2) {
+                    return;
+                }
+                RightMenu.create(_node.id, _text, option.rightMenu);
+                RightMenu.repos(e);
+            });
+        }
+        // rightclick end
+
+        // extends begin
         var _extends = option.extends;
         if (_extends) {
             if ('object' == typeof _extends) {
@@ -201,8 +218,9 @@ define(function() {
                 }
             }
         }
+        // extends end
 
-        // DRAG
+        // drag begin 
         _node.rNode.drag(function(dx, dy, x, y, event) {
             _node.rNode.transform(['t', _node._tx + dx / _node._zoom, _node._ty + dy / _node._zoom].join(','));
             if (_node.rText) {
@@ -246,6 +264,8 @@ define(function() {
                 }
             }
         });
+        // drag end
+
 
         _node.graph.nodes.push(_node);
         _node.graph._nodesMap[id] = _node;

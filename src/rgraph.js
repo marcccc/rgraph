@@ -8,6 +8,7 @@ define(function(require) {
     var Node = require('./component/node');
     var Line = require('./component/line');
     var Tooltip = require('./component/tooltip');
+    var RightMenu = require('./component/rightmenu');
 
     var _idBase = new Date() - 0;
     var _instances = {};
@@ -66,7 +67,12 @@ define(function(require) {
 
         this._init();
 
-
+        dom.oncontextmenu = function(){
+            return false;
+        };
+        document.onclick = function(){
+            RightMenu.remove();
+        };
     }
 
     RGraph.prototype._init = function() {

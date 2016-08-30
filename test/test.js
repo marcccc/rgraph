@@ -77,7 +77,18 @@ var n3 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
         'font-size': 14,
         fill: '#999'
     },
-    hoverText: '这是图片的浮动信息'
+    hoverText: '这是图片的浮动信息',
+    rightMenu: [{
+        name: '右键一',
+        func: function(id, text) {
+            console.log('右键一', id, text);
+        }
+    }, {
+        name: '右键二',
+        func: function(id, text) {
+            console.log('右键二', id, text);
+        }
+    }]
 });
 var n4 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
     type: 'image',
