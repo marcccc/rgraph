@@ -61,7 +61,7 @@ var n2 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
     textAlign: 'right'
 });*/
 
-var n3 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
+var n3 = graph.addNode('n3', {
     type: 'image',
     x: 600,
     y: 100,
@@ -90,7 +90,7 @@ var n3 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
         }
     }]
 });
-var n4 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
+var n4 = graph.addNode('n4', {
     type: 'image',
     x: 600,
     y: 300,
@@ -212,7 +212,8 @@ graph.addLine(n3, n4, {
 
 // graph.autoFit();
 
-graph.centerNode(n1);
+graph.centerLine('n3-n4');
+// graph.centerNode(n1);
 
 
 var resizeTimeout = 0;

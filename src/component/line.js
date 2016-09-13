@@ -333,6 +333,12 @@ define(function() {
             _line.rLineMark.attr('opacity', _line.rLineMark.oldOpacity);
         }
     };
+    Line.prototype.getCenterPos = function(){
+        var _line = this;
+        var _rLine = _line.rLine;
+        var _tLength = _rLine.getTotalLength();
+        return _rLine.getPointAtLength(_tLength/2);
+    };
 
     return Line;
 });

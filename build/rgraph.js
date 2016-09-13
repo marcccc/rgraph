@@ -225,8 +225,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    RGraph.prototype.addLine = function(n1, n2, option) {
 	        return new Line(this,n1,n2,option);
 	    };
+	    RGraph.prototype.getLineById = function(id) {
+	        return this._linesMap[id];
+	    };
 	    RGraph.prototype.getLines = function(){
 	        return this.lines;
+	    };
+	    RGraph.prototype.centerLine = function(line){
+	        if(typeof line == 'string'){
+	            line = this.getLineById(line);
+	        }
+	        if(!line){
+	            return;
+	        }
+	        return this._paper.center(line.getCenterPos());
 	    };
 
 	    return self;
@@ -1372,8 +1384,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (_line.rText) {
 	            var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
 	            var mathAngle = RMath.transToMathAngle(cPoint.alpha % 180);
-	            // var textBBox = _line.rText.getBBox();
-	            // var dist = textBBox.height / 2;
 	            _line.rText.attr({
 	                x: cPoint.x - Math.abs(Math.sin(mathAngle) * 10),
 	                y: cPoint.y - Math.abs(Math.cos(mathAngle) * 10),
@@ -1432,6 +1442,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (_line.rLineMark) {
 	            _line.rLineMark.attr('opacity', _line.rLineMark.oldOpacity);
 	        }
+	    };
+	    Line.prototype.getCenterPos = function(){
+	        var _line = this;
+	        var _rLine = _line.rLine;
+	        var _tLength = _rLine.getTotalLength();
+	        return _rLine.getPointAtLength(_tLength/2);
 	    };
 
 	    return Line;

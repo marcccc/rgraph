@@ -169,8 +169,20 @@ define(function(require) {
     RGraph.prototype.addLine = function(n1, n2, option) {
         return new Line(this,n1,n2,option);
     };
+    RGraph.prototype.getLineById = function(id) {
+        return this._linesMap[id];
+    };
     RGraph.prototype.getLines = function(){
         return this.lines;
+    };
+    RGraph.prototype.centerLine = function(line){
+        if(typeof line == 'string'){
+            line = this.getLineById(line);
+        }
+        if(!line){
+            return;
+        }
+        return this._paper.center(line.getCenterPos());
     };
 
     return self;
