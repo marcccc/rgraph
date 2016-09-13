@@ -256,6 +256,11 @@ define(function() {
         var _line = this;
         var _sPos = _line.n1.getCenterPos(),
             _ePos = _line.n2.getCenterPos();
+
+        if (_line.hasGlows) {
+            _line.glows.remove();
+        }
+
         var path;
         if (!_line.isCurve) {
             path = ['M', _sPos.x, _sPos.y, _ePos.x, _ePos.y];
@@ -290,6 +295,11 @@ define(function() {
                 transform: 'r' + cPoint.alpha % 180
             });
         }
+        if (_line.hasGlows) {
+            _line.glows = _line.rLine.glow({
+                color: _line.getColor()
+            });
+        }
     };
 
     Line.prototype.resetEffect = function() {
@@ -306,6 +316,9 @@ define(function() {
 
     Line.prototype.weaken = function() {
         var _line = this;
+        if (_line.hasGlows) {
+            _line.glows.remove();
+        }
         var oldOpacity = _line.rLine.attr('opacity');
         _line.rLine.oldOpacity = oldOpacity;
         _line.rLine.attr('opacity', oldOpacity * 0.1);
@@ -332,13 +345,39 @@ define(function() {
         if (_line.rLineMark) {
             _line.rLineMark.attr('opacity', _line.rLineMark.oldOpacity);
         }
+        if (_line.hasGlows) {
+            if(_line.glows){
+                _line.glows.remove();
+            }
+            _line.glows = _line.rLine.glow({
+                color: _line.getColor()
+            });
+        }
     };
-    Line.prototype.getCenterPos = function(){
+    Line.prototype.getCenterPos = function() {
         var _line = this;
         var _rLine = _line.rLine;
         var _tLength = _rLine.getTotalLength();
-        return _rLine.getPointAtLength(_tLength/2);
+        return _rLine.getPointAtLength(_tLength / 2);
     };
-
+    Line.prototype.addGlow = function() {
+        var _line = this;
+        _line.removeGlow();
+        _line.glows = _line.rLine.glow({
+            color: _line.getColor()
+        });
+        _line.hasGlows = true;
+    };
+    Line.prototype.removeGlow = function() {
+        var _line = this;
+        if (_line.glows) {
+            _line.glows.remove();
+        }
+        _line.hasGlows = false;
+    };
+    Line.prototype.getColor = function() {
+        var _line = this;
+        return _line.rLine.attr('stroke');
+    };
     return Line;
 });

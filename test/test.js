@@ -12,7 +12,7 @@ var graph = RGraph.init(document.querySelector('#canvas'), {
 
 
 // graph.addNode(new Date() + Math.random()*1000);
-var n1 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
+var n1 = graph.addNode('n1', {
     x: 200,
     y: 100,
     r: 30,
@@ -33,7 +33,7 @@ var n1 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
 
 });
 
-var n2 = graph.addNode(new Date().getTime() + parseInt(Math.random() * 1000), {
+var n2 = graph.addNode('n2', {
     x: 200,
     y: 300,
     r: 30,
@@ -215,6 +215,7 @@ graph.addLine(n3, n4, {
 graph.centerLine('n3-n4');
 // graph.centerNode(n1);
 
+graph.getLineById('n1-n4').addGlow();
 
 var resizeTimeout = 0;
 var timeStamp = new Date() - 0;
