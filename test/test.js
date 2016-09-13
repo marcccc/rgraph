@@ -151,15 +151,27 @@ n3.addExtend([{
 n3.clearExtend();
 graph.addLine(n1, n2, {
     text: 'n1-n2连线',
-    isCurve: true
+    // isCurve: true,
+    mark: {
+        type: 'image',
+        width: 20,
+        height: 20,
+        src: 'image/quest.svg'
+    }
 });
 graph.addLine(n1, n3, {
     text: 'n1-n3连线',
     isCurve: true
 });
 graph.addLine(n1, n4, {
-    text: 'n1-n4连线',
-    isCurve: true
+    // text: 'n1-n4连线',
+    // isCurve: true,
+    mark: {
+        type: 'image',
+        width: 30,
+        height: 15,
+        src: 'image/drect.svg'
+    }
 });
 graph.addLine(n2, n3, {
     text: 'n2-n3连线',
@@ -170,7 +182,14 @@ graph.addLine(n2, n3, {
     isCurve: true
 });
 graph.addLine(n2, n4, {
-    isCurve: true
+    // isCurve: true,
+    isDashed: true,
+    mark: {
+        type: 'image',
+        width: 20,
+        height: 20,
+        src: 'image/quest.svg'
+    }
 });
 graph.addLine(n3, n4, {
     effect: true,
@@ -187,12 +206,14 @@ graph.addLine(n3, n4, {
     },
     dbclick: function(id, n1, n2) {
         console.log(id, n1, n2);
-    }
+    },
+    isDashed: true
 });
 
 // graph.autoFit();
 
 graph.centerNode(n1);
+
 
 var resizeTimeout = 0;
 var timeStamp = new Date() - 0;

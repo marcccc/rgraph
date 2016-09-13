@@ -1140,6 +1140,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            stroke: '#FF9900',
 	            'stroke-width': 2
 	        };
+	        var _isDashed = option.isDashed;
+	        if (_isDashed) {
+	            _attr['stroke-dasharray'] = ['-'];
+	        }
+
 	        var _sPos = n1.getCenterPos(),
 	            _ePos = n2.getCenterPos();
 
@@ -1163,6 +1168,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        'opacity': 0.5
 	                    };
 	                    _line.rLineMark = _line.graph.rPaper.rect(cPoint.x - width / 2, cPoint.y - height / 2, width, height).attr(markAttr).attr({
+	                        transform: 'r' + cPoint.alpha % 180
+	                    });
+	                    _line.markWidth = width;
+	                    _line.markHeight = height;
+	                } else if (_mark.type == 'image') {
+	                    var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
+	                    var width = _mark.width || 20;
+	                    var height = _mark.height || 20;
+	                    var src = _mark.src;
+
+	                    _line.rLineMark = _line.graph.rPaper.image(src, cPoint.x - width / 2, cPoint.y - height / 2, width, height).attr({
 	                        transform: 'r' + cPoint.alpha % 180
 	                    });
 	                    _line.markWidth = width;
@@ -1244,8 +1260,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	        if (_line.rLineMark) {
 	            _line.rLineMark.mouseover(function() {
-	                Tooltip.create(_hoverText);
-
+	                if (_hoverText) {
+	                    Tooltip.create(_hoverText);
+	                }
 	                var hoverStrokeWidth = _line.rLine.attr('stroke-width')
 	                _line.hoverStrokeWidth = hoverStrokeWidth;
 	                _line.rLine.attr('stroke-width', hoverStrokeWidth * 3);
@@ -1277,7 +1294,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            });
 	            _line.rLineMark.mousemove(function(e) {
-	                Tooltip.repos(e);
+	                if (_hoverText) {
+	                    Tooltip.repos(e);
+	                }
 	            });
 	        }
 

@@ -42,6 +42,11 @@ define(function() {
             stroke: '#FF9900',
             'stroke-width': 2
         };
+        var _isDashed = option.isDashed;
+        if (_isDashed) {
+            _attr['stroke-dasharray'] = ['-'];
+        }
+
         var _sPos = n1.getCenterPos(),
             _ePos = n2.getCenterPos();
 
@@ -65,6 +70,17 @@ define(function() {
                         'opacity': 0.5
                     };
                     _line.rLineMark = _line.graph.rPaper.rect(cPoint.x - width / 2, cPoint.y - height / 2, width, height).attr(markAttr).attr({
+                        transform: 'r' + cPoint.alpha % 180
+                    });
+                    _line.markWidth = width;
+                    _line.markHeight = height;
+                } else if (_mark.type == 'image') {
+                    var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
+                    var width = _mark.width || 20;
+                    var height = _mark.height || 20;
+                    var src = _mark.src;
+
+                    _line.rLineMark = _line.graph.rPaper.image(src, cPoint.x - width / 2, cPoint.y - height / 2, width, height).attr({
                         transform: 'r' + cPoint.alpha % 180
                     });
                     _line.markWidth = width;
@@ -146,8 +162,9 @@ define(function() {
         });
         if (_line.rLineMark) {
             _line.rLineMark.mouseover(function() {
-                Tooltip.create(_hoverText);
-
+                if (_hoverText) {
+                    Tooltip.create(_hoverText);
+                }
                 var hoverStrokeWidth = _line.rLine.attr('stroke-width')
                 _line.hoverStrokeWidth = hoverStrokeWidth;
                 _line.rLine.attr('stroke-width', hoverStrokeWidth * 3);
@@ -179,7 +196,9 @@ define(function() {
                 }
             });
             _line.rLineMark.mousemove(function(e) {
-                Tooltip.repos(e);
+                if (_hoverText) {
+                    Tooltip.repos(e);
+                }
             });
         }
 
@@ -255,8 +274,6 @@ define(function() {
         if (_line.rText) {
             var cPoint = _line.rLine.getPointAtLength(_line.rLine.getTotalLength() / 2);
             var mathAngle = RMath.transToMathAngle(cPoint.alpha % 180);
-            // var textBBox = _line.rText.getBBox();
-            // var dist = textBBox.height / 2;
             _line.rText.attr({
                 x: cPoint.x - Math.abs(Math.sin(mathAngle) * 10),
                 y: cPoint.y - Math.abs(Math.cos(mathAngle) * 10),
